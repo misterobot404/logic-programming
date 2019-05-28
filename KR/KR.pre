@@ -1,0 +1,20 @@
+/*****************************************************************************
+
+		Copyright (c) My Company
+
+ Project:  KR
+ FileName: KR.PRE
+ Purpose: Predicate definitions for KR.PRO
+ Written by: Visual Prolog
+ Comments:
+******************************************************************************/
+
+%BEGIN_DECL, System generated global predicates
+GLOBAL PREDICATES
+
+  project_ShowHelpContext(INTEGER Index) - (i)
+  tb_project_toolbar_Create(WINDOW Parent) - (i)
+  tb_help_line_Create(WINDOW Parent) - (i)
+  dlg_game_Create(WINDOW Parent) - (i)
+  dlg_rules_Create(WINDOW Parent) - (i)
+%END_DECL

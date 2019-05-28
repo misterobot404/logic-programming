@@ -1,0 +1,393 @@
+/*****************************************************************************
+
+		Copyright (c) My Company
+
+ Project:  LAB3
+ FileName: LAB3.PRO
+ Purpose: No description
+ Written by: Visual Prolog
+ Comments:
+******************************************************************************/
+
+include "lab3.inc"
+include "lab3.con"
+include "hlptopic.con"
+
+%BEGIN_WIN Task Window
+/***************************************************************************
+		Event handling for Task Window
+***************************************************************************/
+
+predicates
+
+  task_win_eh : EHANDLER
+
+constants
+
+%BEGIN Task Window, CreateParms, 21:39:04-5.4.2019, Code automatically updated!
+  task_win_Flags = [wsf_SizeBorder,wsf_TitleBar,wsf_Close,wsf_Maximize,wsf_Minimize,wsf_ClipSiblings]
+  task_win_Menu  = res_menu(idr_task_menu)
+  task_win_Title = "Lab3"
+  task_win_Help  = idh_contents
+%END Task Window, CreateParms
+
+clauses
+
+
+%MARK Task Window, new events
+
+%BEGIN Task Window, e_Create
+  task_win_eh(_Win,e_Create(_CreationData),0):-!,
+  dlg_main_window_Create(_Win), win_Destroy(_Win),!.
+%END Task Window, e_Create
+
+%BEGIN Task Window, id_help_contents
+  task_win_eh(_Win,e_Menu(id_help_contents,_ShiftCtlAlt),0):-!,
+  	vpi_ShowHelp("lab3.hlp"),
+	!.
+%END Task Window, id_help_contents
+
+%BEGIN Task Window, id_help_about
+  task_win_eh(Win,e_Menu(id_help_about,_ShiftCtlAlt),0):-!,
+	dlg_about_dialog_Create(Win),
+	!.
+%END Task Window, id_help_about
+
+%BEGIN Task Window, id_file_exit
+  task_win_eh(Win,e_Menu(id_file_exit,_ShiftCtlAlt),0):-!,
+  	win_Destroy(Win),
+	!.
+%END Task Window, id_file_exit
+
+%BEGIN Task Window, e_Size
+  task_win_eh(_Win,e_Size(_Width,_Height),0):-!,
+ifdef use_tbar
+	toolbar_Resize(_Win),
+enddef
+ifdef use_message
+	msg_Resize(_Win),
+enddef
+	!.
+%END Task Window, e_Size
+
+%END_WIN Task Window
+
+/***************************************************************************
+		Invoking on-line Help
+***************************************************************************/
+
+  project_ShowHelpContext(HelpTopic):-
+  	vpi_ShowHelpContext("lab3.hlp",HelpTopic).
+
+/***************************************************************************
+			Main Goal
+***************************************************************************/
+
+goal
+
+ifdef use_mdi
+  vpi_SetAttrVal(attr_win_mdi,b_true),
+enddef
+ifdef ws_win
+  ifdef use_3dctrl
+    vpi_SetAttrVal(attr_win_3dcontrols,b_true),
+  enddef
+enddef  
+  vpi_Init(task_win_Flags,task_win_eh,task_win_Menu,"lab3",task_win_Title).
+
+%BEGIN_TLB Project toolbar, 21:39:04-5.4.2019, Code automatically updated!
+/**************************************************************************
+	Creation of toolbar: Project toolbar
+**************************************************************************/
+
+clauses
+
+  tb_project_toolbar_Create(_Parent):-
+ifdef use_tbar
+	toolbar_create(tb_top,0xC0C0C0,_Parent,
+		[tb_ctrl(id_file_new,pushb,idb_new_up,idb_new_dn,idb_new_up,"New;New file",1,1),
+		 tb_ctrl(id_file_open,pushb,idb_open_up,idb_open_dn,idb_open_up,"Open;Open file",1,1),
+		 tb_ctrl(id_file_save,pushb,idb_save_up,idb_save_dn,idb_save_up,"Save;File save",1,1),
+		 separator,
+		 tb_ctrl(id_edit_undo,pushb,idb_undo_up,idb_undo_dn,idb_undo_up,"Undo;Undo",1,1),
+		 tb_ctrl(id_edit_redo,pushb,idb_redo_up,idb_redo_dn,idb_redo_up,"Redo;Redo",1,1),
+		 separator,
+		 tb_ctrl(id_edit_cut,pushb,idb_cut_up,idb_cut_dn,idb_cut_up,"Cut;Cut to clipboard",1,1),
+		 tb_ctrl(id_edit_copy,pushb,idb_copy_up,idb_copy_dn,idb_copy_up,"Copy;Copy to clipboard",1,1),
+		 tb_ctrl(id_edit_paste,pushb,idb_paste_up,idb_paste_dn,idb_paste_up,"Paste;Paste from clipboard",1,1),
+		 separator,
+		 separator,
+		 tb_ctrl(id_help_contents,pushb,idb_help_up,idb_help_down,idb_help_up,"Help;Help",1,1)]),
+enddef
+	true.
+%END_TLB Project toolbar
+
+%BEGIN_TLB Help line, 21:39:04-5.4.2019, Code automatically updated!
+/**************************************************************************
+	Creation of toolbar: Help line
+**************************************************************************/
+
+clauses
+
+  tb_help_line_Create(_Parent):-
+ifdef use_tbar
+	toolbar_create(tb_bottom,0xC0C0C0,_Parent,
+		[tb_text(idt_help_line,tb_context,452,0,4,10,0x0,"")]),
+enddef
+	true.
+%END_TLB Help line
+
+%BEGIN_DLG About dialog
+/**************************************************************************
+	Creation and event handling for dialog: About dialog
+**************************************************************************/
+
+constants
+
+%BEGIN About dialog, CreateParms, 21:39:04-5.4.2019, Code automatically updated!
+  dlg_about_dialog_ResID = idd_dlg_about
+  dlg_about_dialog_DlgType = wd_Modal
+  dlg_about_dialog_Help = idh_contents
+%END About dialog, CreateParms
+
+predicates
+
+  dlg_about_dialog_eh : EHANDLER
+
+clauses
+
+  dlg_about_dialog_Create(Parent):-
+	win_CreateResDialog(Parent,dlg_about_dialog_DlgType,dlg_about_dialog_ResID,dlg_about_dialog_eh,0).
+
+%BEGIN About dialog, idc_ok _CtlInfo
+  dlg_about_dialog_eh(_Win,e_Control(idc_ok,_CtrlType,_CtrlWin,_CtrlInfo),0):-!,
+	win_Destroy(_Win),
+	!.
+%END About dialog, idc_ok _CtlInfo
+%MARK About dialog, new events
+
+  dlg_about_dialog_eh(_,_,_):-!,fail.
+
+%END_DLG About dialog
+
+%BEGIN_DLG main_window
+/**************************************************************************
+	Creation and event handling for dialog: main_window
+**************************************************************************/
+
+constants
+
+%BEGIN main_window, CreateParms, 18:26:36-6.4.2019, Code automatically updated!
+  dlg_main_window_ResID = idd_main_window
+  dlg_main_window_DlgType = wd_Modal
+  dlg_main_window_Help = idh_contents
+%END main_window, CreateParms
+
+domains
+  intArray = integer*
+  symArray = symbol*
+
+predicates
+  dlg_main_window_eh : EHANDLER
+  dlg_main_window_handle_answer(INTEGER EndButton,DIALOG_VAL_LIST)
+  dlg_main_window_update(DIALOG_VAL_LIST)
+/*
+  revers(intArray, intArray)
+  revers(intArray, intArray, intArray)
+  revers(symArray, symArray)
+  revers(symArray, symArray, symArray)
+
+  task3_entry()
+  append(integer, integer, intArray, intArray, intArray, intArray)
+  append(intArray,intArray,intArray)
+  append(integer, integer, symArray, symArray, symArray, symArray)
+  append(symArray,symArray,symArray)
+
+  insert_sort(intArray,intArray)
+  insertEl(integer,intArray,intArray)
+*/
+
+clauses
+/*
+%Task 2 
+  revers(X,Y):- revers([],X,Y).  
+  revers(Y,[],Y).  
+  revers(X1,[Z|X2],Y):- revers([Z|X1],X2,Y).
+%Task 3
+  task3_entry():- 
+  %num
+  write("??????:"), nl,
+  NumArray1 = [-5,4,0,-15,4],
+  NumArray2 = [0,1,2],
+  NumArray3 = [-1,-2,-3],
+  write(NumArray1), nl,
+  write(NumArray2), nl,
+  write(NumArray3), nl,
+  write("??????? ??????? ????????????? ??????? (????? Enter):"), nl,
+  readint(FirstNum),
+  readint(SecondNum),
+  append(FirstNum, SecondNum, NumArray1, NumArray2, NumArray3, NumArray3Res),
+  write("?????????: ", NumArray3Res), nl, 
+  %sym
+  write("??????:"), nl,
+  SymArray1 = ["g","y","g","b"],
+  SymArray2 = ["y"],
+  SymArray3 = ["g","b"],
+  write(SymArray1), nl,
+  write(SymArray2), nl,
+  write(SymArray3), nl,
+  write("??????? ??????? ????????????? ??????? (????? Enter):"), nl,
+  readint(FirstSym),
+  readint(Second1Sym),
+  append(FirstSym, Second1Sym, SymArray1, SymArray2, SymArray3, SymArray3Res),
+  write("?????????: ", SymArray3Res), nl, nl.
+
+  append([], L, L).
+  append([N|L1], L2, [N|L3]) :- append(L1,L2,L3).
+  append(Fisrt, Second, L1, L2, L3, L4) :- Fisrt=1, Second=2, !, append(L1, L2, Res), append(Res, L3, L4).
+  append(Fisrt, Second, L1, L2, L3, L4) :- Fisrt=1, Second=3, !, append(L1, L3, Res), append(Res, L2, L4).
+  append(Fisrt, Second, L1, L2, L3, L4) :- Fisrt=2, Second=1, !, append(L2, L1, Res), append(Res, L3, L4).
+  append(Fisrt, Second, L1, L2, L3, L4) :- Fisrt=2, Second=3, !, append(L2, L3, Res), append(Res, L1, L4).
+  append(Fisrt, Second, L1, L2, L3, L4) :- Fisrt=3, Second=1, !, append(L3, L1, Res), append(Res, L2, L4).
+  append(Fisrt, Second, L1, L2, L3, L4) :- Fisrt=3, Second=2, !, append(L3, L2, Res), append(Res, L1, L4).
+%Task 4
+  insert_sort([],[]).
+  insert_sort([X|Tail],Sorted_list) :- insert_sort(Tail,Sorted_Tail), insertEl(X,Sorted_Tail,Sorted_list).
+ 
+  insertEl(X,[Y|Sorted_list],[Y|Sorted_list1]) :-  X<Y, !, insertEl(X,Sorted_list,Sorted_list1).
+  insertEl(X,Sorted_list,[X|Sorted_list]).*/
+
+  dlg_main_window_Create(Parent):-
+
+%MARK main_window, new variables
+
+	dialog_CreateModal(Parent,dlg_main_window_ResID,"",
+  		[
+%BEGIN main_window, ControlList, 18:26:36-6.4.2019, Code automatically updated!
+%END main_window, ControlList
+		],
+		dlg_main_window_eh,0,VALLIST,ANSWER),
+	dlg_main_window_handle_answer(ANSWER,VALLIST).
+
+  dlg_main_window_handle_answer(idc_ok,VALLIST):-!,
+	dlg_main_window_update(VALLIST).
+  dlg_main_window_handle_answer(idc_cancel,_):-!.  % Handle Esc and Cancel here
+  dlg_main_window_handle_answer(_,_):-
+	errorexit().
+
+  dlg_main_window_update(_VALLIST):-
+%BEGIN main_window, Update controls, 18:26:36-6.4.2019, Code automatically updated!
+%END main_window, Update controls
+	true.
+
+%MARK main_window, new events
+
+%BEGIN main_window, idc_insert_el _CtlInfo
+  dlg_main_window_eh(_Win,e_Control(idc_insert_el,_CtrlType,_CtrlWin,_CtlInfo),0):-!,
+  dlg_insert_el_Create(_Win),
+	!.
+%END main_window, idc_insert_el _CtlInfo
+
+%BEGIN main_window, idc_help _CtlInfo
+  dlg_main_window_eh(_Win,e_Control(idc_help,_CtrlType,_CtrlWin,_CtlInfo),0):-!,
+	dlg_Note("Помощь","Данная программа предназначена для демонстрации возможностей: вставки элемента в список после всех вхождений указанного, реверса списка, объединения трех списков в один, сортировка методом вставок."),
+	!.
+%END main_window, idc_help _CtlInfo
+
+%BEGIN main_window, idc_cancel _CtlInfo
+  dlg_main_window_eh(_Win,e_Control(idc_cancel,_CtrlType,_CtrlWin,_CtlInfo),0):-!, win_Destroy(_Win),
+	!.
+%END main_window, idc_cancel _CtlInfo
+
+  dlg_main_window_eh(_,_,_):-!,fail.
+
+%END_DLG main_window
+
+%BEGIN_DLG insert_el
+/**************************************************************************
+	Creation and event handling for dialog: insert_el
+**************************************************************************/
+
+constants
+
+%BEGIN insert_el, CreateParms, 19:13:21-6.4.2019, Code automatically updated!
+  dlg_insert_el_ResID = idd_insert_el
+  dlg_insert_el_DlgType = wd_Modal
+  dlg_insert_el_Help = idh_contents
+%END insert_el, CreateParms
+
+predicates
+  num_list_to_string(intArray, string).
+
+  insert(integer, integer, intArray, intArray)
+  %insert(symbol, symbol, symArray, symArray)
+
+  dlg_insert_el_eh : EHANDLER
+  dlg_insert_el_handle_answer(INTEGER EndButton,DIALOG_VAL_LIST)
+  dlg_insert_el_update(DIALOG_VAL_LIST)
+
+clauses
+  num_list_to_string([], "").   
+  num_list_to_string([H|T], S) :- num_list_to_string(T, S1), concat(S1," ", R), str_int(C, H), concat(R, C, S).
+       
+  insert(_,_,[],[]).
+  insert(X,Head,[Head|Z],[Head,X|T]):- insert(X,Head,Z,T),!.
+  insert(X,Y,[Head|Z],[Head|N]):- insert(X,Y,Z,N).
+  
+  dlg_insert_el_Create(Parent):-
+
+%MARK insert_el, new variables
+
+	dialog_CreateModal(Parent,dlg_insert_el_ResID,"",
+  		[
+%BEGIN insert_el, ControlList, 19:13:21-6.4.2019, Code automatically updated!
+		df(idc_edit_after,editstr("",[]),nopr),
+		df(idc_edit_insert,editstr("",[]),nopr),
+		df(idc_num_list_res,listbox([],[0]),nopr)
+%END insert_el, ControlList
+		],
+		dlg_insert_el_eh,0,VALLIST,ANSWER),
+	dlg_insert_el_handle_answer(ANSWER,VALLIST).
+
+  dlg_insert_el_handle_answer(idc_ok,VALLIST):-!,
+	dlg_insert_el_update(VALLIST).
+  dlg_insert_el_handle_answer(idc_cancel,_):-!.  % Handle Esc and Cancel here
+  dlg_insert_el_handle_answer(_,_):-
+	errorexit().
+
+  dlg_insert_el_update(_VALLIST):-
+%BEGIN insert_el, Update controls, 19:13:21-6.4.2019, Code automatically updated!
+	_IDC_EDIT_AFTER_VALUE = dialog_VLGetstr(idc_edit_after,_VALLIST),
+	_IDC_EDIT_INSERT_VALUE = dialog_VLGetstr(idc_edit_insert,_VALLIST),
+	dialog_VLGetListBox(idc_num_list_res,_VALLIST,_IDC_NUM_LIST_RES_ITEMLIST,_IDC_NUM_LIST_RES_SELECT),
+%END insert_el, Update controls
+	true.
+
+%MARK insert_el, new events
+
+%BEGIN insert_el, idc_ok _CtlInfo
+  dlg_insert_el_eh(_Win,e_Control(idc_ok,_CtrlType,_CtrlWin,_CtlInfo),0):-!,
+  
+  LBox_Handle = win_GetCtlHandle(_Win,idc_num_list_res),
+  
+  EditAfter_Handle = win_GetCtlHandle(_Win,idc_edit_after),
+  EditAfter_Text =win_GetText(EditAfter_Handle),
+  str_int(EditAfter_Text, After_number),
+  
+  EditInsert_Handle = win_GetCtlHandle(_Win,idc_edit_insert),
+  EditInsert_Text =win_GetText(EditInsert_Handle),
+  str_int(EditInsert_Text, Insert_number),
+  
+  NumArray = [-5,4,0,-15,4,0,1,-5],   
+  insert(Insert_number, After_number, NumArray, NumArrayRes),
+  
+  num_list_to_string(NumArrayRes,StringArray),
+  lbox_Clear (LBox_Handle),
+  lbox_Add(LBox_Handle, StringArray),
+	!.
+%END insert_el, idc_ok _CtlInfo
+
+  dlg_insert_el_eh(_,_,_):-!,fail.
+
+%END_DLG insert_el
+

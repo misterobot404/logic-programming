@@ -1,0 +1,18 @@
+/*****************************************************************************
+
+		Copyright (c) My Company
+
+ Project:  LAB4
+ FileName: Lab4.PRE
+ Purpose: Predicate definitions for LAB4.PRO
+ Written by: Visual Prolog
+ Comments:
+******************************************************************************/
+
+%BEGIN_DECL, System generated global predicates
+GLOBAL PREDICATES
+
+  project_ShowHelpContext(INTEGER Index) - (i)
+  dlg_about_dialog_Create(WINDOW Parent) - (i)
+  dlg_main_window_Create(WINDOW Parent) - (i)
+%END_DECL

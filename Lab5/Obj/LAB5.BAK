@@ -1,0 +1,20 @@
+[OPTIONS]
+WARNING=3
+REPORT=ON
+ROOT=C:\Users\misterobot\Google Drive\University\ËÏ Àáàðíèêîâà\Lab5\Obj
+BMROOT=C:\Users\misterobot\Google Drive\University\ËÏ Àáàðíèêîâà\Lab5\Res\Win
+ERRORLOG=C:\Users\misterobot\Google Drive\University\ËÏ Àáàðíèêîâà\Lab5\Obj\HLPBUGS.TXT
+COPYRIGHT=Copyright (c)
+TITLE=Lab5
+COMPRESS=false
+CONTENTS=idh_Contents
+
+[FILES]
+C:\Users\misterobot\Google Drive\University\ËÏ Àáàðíèêîâà\Lab5\Obj\LAB5.RTF
+[WINDOWS]
+main=,,0,(255,255,255),(192,192,192),0
+[CONFIG]
+
+
+[MAP]
+idh_Contents 1
